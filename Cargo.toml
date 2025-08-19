@@ -1,0 +1,19 @@
+[package]
+name = "fsen"
+version = "0.1.0"
+year_of_release = "2025"
+authors = ["Zoran Jeremić"]
+description = ".fsen - file format made for plain text."
+license = "Apache 2.0"
+repository = "https://github.com/ZoranJeremic/.fsen"
+readme = "README.md"
+
+[lib]
+crate-type = ["cdylib", "rlib"] 
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+bincode = "1.3"        
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
