@@ -1,0 +1,53 @@
+use fsen::{
+    Note, 
+    NoteFormat, 
+    save_note_json, 
+    save_note_bin, 
+    load_note_bin,
+    load_note_json
+};
+
+use std::fs;
+use std::path::Path;
+
+fn main() {
+    // 👉 1. Kreiramo novu belešku
+    let note = Note::new(
+        "Prva beleška",
+        "Ovo je sadržaj u fSEN formatu! 🚀",
+        NoteFormat::Fsen
+    );
+
+    println!("Nova beleška: {:?}", note);
+
+    // 👉 2. Serijalizacija u JSON
+    let json = save_note_json(&note);
+    println!("\n=== JSON FORMAT ===\n{}", json);
+
+    // Snimamo JSON u fajl (debug)
+    fs::write("note.json", &json).expect("Ne mogu da snimim JSON!");
+
+    // 👉 3. Serijalizacija u binarni fSEN format
+    let bin = save_note_bin(&note);
+
+    // Snimamo bin u .fsen fajl
+    fs::write("note.fsen", &bin).expect("Can't save fsen");
+
+    println!("\nSnimljena beleška u note.fsen ✅");
+
+    // 👉 4. Učitavanje nazad iz bin fajla
+    let bytes = fs::read("note.fsen").expect("Can't read fsen");
+    let restored_note = load_note_bin(&bytes);
+
+    println!("\n=== RESTORED FROM FSEN ===\n{:?}", restored_note);
+
+    let json_str = fs::read_to_string("note.json").expect("Can't read JSON");
+    let restored_from_json = load_note_json(&json_str);
+
+    println!("\n=== RESTORED FROM JSON ===\n{:?}", restored_from_json);
+
+    assert_eq!(note.title, restored_note.title);
+    assert_eq!(note.content, restored_note.content);
+
+    println!("\nEverything works just fine!");
+}
